@@ -1,0 +1,45 @@
+{% extends 'VT/base.html' %}
+{% load static %}
+
+{% block page_name %}
+    Profile
+{% endblock %}
+ {% block login_form %}
+         <form id="log" action="{% url 'VTessential:login' %}" method="POST" style="width: 10rem; margin-left: 2rem;margin-right: 2rem;height: 10rem">
+                   {% csrf_token %}
+                   <input style="height: 1.5rem" type="text" placeholder="Username" name="username">
+                   <input style="height: 1.5rem" type="password" placeholder="Password" name="password">
+                   <input style="height: 2rem" type="submit" class="btn" name="Login">
+                   <a href="">Forgot password</a>
+               </form>
+  {% endblock %}
+{% block detail_page %}
+    {% for user in user %}
+     <div class="col-2">
+        {% load static %}
+             <img src="{% static "img/user-1.png"%}" width="50%" id="ProductImg">
+             <div class="small-img-row">
+         </div>
+         </div>
+        <div class="col-2">
+        <form action="{% url "user:edit_user" %}" method="POST">
+            {% csrf_token %}
+            <a href="{% url 'user:profile' user.username %}">View</a>
+            <h4>Profile Information</h4>
+            <input type="hidden" name="user_id" value="{{ user.id }}">
+            <h3> User-id:- {{ user.id }}</h3>
+            <h3> First Name:- {{ user.first_name }}</h3>
+            <h3> Last Name:- {{ user.last_name }}</h3>
+            <h3> Username:- {{ user.username }}</h3>
+            <h3> Email:- {{ user.email }}</h3>
+            <h3> User Role:- {{ user.details.role }}</h3>
+            <button type="submit" class="btn">Edit</button>
+        </form>
+        </div>
+         {% endfor %}
+    </div>
+
+</div>
+
+{% endblock %}
+

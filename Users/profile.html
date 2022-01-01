@@ -1,0 +1,135 @@
+{% extends 'VT/base.html' %}
+{% load static %}
+{% load humanize %}
+{% block page_name %}
+    Profile
+{% endblock %}
+ {% block login_form %}
+         <form id="log" action="{% url 'VTessential:login' %}" method="POST" style="width: 10rem; margin-left: 2rem;margin-right: 2rem;height: 10rem">
+                   {% csrf_token %}
+                   <input style="height: 1.5rem" type="text" placeholder="Username" name="username">
+                   <input style="height: 1.5rem" type="password" placeholder="Password" name="password">
+                   <input style="height: 2rem" type="submit" class="btn" name="Login">
+                   <a href="">Forgot password</a>
+               </form>
+  {% endblock %}
+{% block detail_page %}
+     <div class="col-2">
+        {% load static %}
+             <img src="{% static "img/user-1.png"%}" width="50%" id="ProductImg">
+             <div class="small-img-row">
+         </div>
+         </div>
+        <div class="col-2">
+        <form action="{% url "user:edit" %}" method="POST">{% csrf_token %}
+            <h4>Profile Information</h4>
+            <input type="hidden" name="user_id" value="{{ user.id }}">
+            <h3> UserId:- {{ user.id }}</h3>
+            <input type="hidden" name="first_name" value="{{ user.first_name }}">
+            <h3> First Name:- {{ user.first_name }}</h3>
+            <input type="hidden" name="last_name" value="{{ user.last_name }}">
+            <h3> Last Name:- {{ user.last_name }}</h3>
+            <input type="hidden" name="username" value="{{ user.username }}">
+            <h3> Username:- {{ user.username }}</h3>
+            <input type="hidden" name="email" value="{{ user.email }}">
+            <h3> Email:- {{ user.email }}</h3>
+            <input type="hidden" name="password" value="{{ user.password }}">
+            <input type="hidden" name="role" value="{{ user.details.role }}">
+            <h3> User Role:- {{ user.details.role }}</h3>
+            <button type="submit" class="btn">Edit</button>
+        </form>
+        </div>
+    </div>
+</div>
+{% endblock %}
+{% block content %}
+     <div class="testimonial">
+    <div class="small-container">
+              <h2 class="title">Recent Activity</h2>
+    <div class="row">
+        {% for action in action %}
+        <div class="col-3">
+            <p> <a style="color: #ff523b" href="{% url 'user:profile' action.user.username %}">{{ action.user }}</a> {{ action.verb }} to <a style="color: #ff523b" href="{% url 'VTessential:item_detail' action.target.id %}"> {{ action.target.title  }}</a>{{ action.created|naturaltime  }}</p>
+        </div>
+        {% endfor %}
+    </div>
+    </div>
+</div>
+{% endblock %}
+
+
+    {% block item_list %}
+     <div class="row">
+           {% for item in items %}
+               <div class="col-4">
+               {% if item.type == "T-shirt" or item.type == "Tshirt" or item.type == "t-shirt" %}
+                    <a href="{% url "VTessential:item_detail" item.id %}"><img src="{% static "img/product-1.jpg" %}"></a>
+                {% elif item.type == "shoes" or item.type == "Shoes" %}
+                    <a href="{% url "VTessential:item_detail" item.id %}"><img src="{% static "img/product-2.jpg" %}"></a>
+                {% endif %}
+                   <h4><a href="{% url "VTessential:item_detail" item.id %}">{{ item.title }}</a></h4>
+               <h4><a href="{% url "VTessential:item_detail" item.id %}">Product Id - <b>{{ item.id }}</b></a></h4>
+                   <div class="rating">
+               {% if item.rating == 5 %}
+                   <i class="fa fa-star"></i>
+                   <i class="fa fa-star"></i>
+                   <i class="fa fa-star"></i>
+                   <i class="fa fa-star"></i>
+                   <i class="fa fa-star"></i>
+               {% elif item.rating == 4 %}
+                   <i class="fa fa-star"></i>
+                   <i class="fa fa-star"></i>
+                   <i class="fa fa-star"></i>
+                   <i class="fa fa-star"></i>
+                   <i class="fa fa-star-o"></i>
+               {% elif item.rating == 4.5 %}
+                   <i class="fa fa-star"></i>
+                   <i class="fa fa-star"></i>
+                   <i class="fa fa-star"></i>
+                   <i class="fa fa-star"></i>
+                   <i class="fa fa-star-half-o"></i>
+               {% elif item.rating == 0 %}
+                   <span>No ratings</span>
+               {% endif %}
+                   </div>
+                   <p>${{ item.price }}</p>
+                   <form action="{% url 'user:comment' %} " method="post">
+                       {% csrf_token %}
+               <input type="hidden" value="{{ item.title }}"  name="title">
+                       <input type="hidden" value="{{ item.id }}">
+                       <input type="hidden" value="{{ user.id }}">
+               <input type="hidden" value="{{ user.username }}" name="username">
+               <button class="btn" >Review</button>
+               </form>
+               </div>
+              {% endfor %}
+           </div>
+{% endblock %}
+{#{% block content %}#}
+{#     <div class="testimonial">#}
+{#    <h2>Reviews</h2>#}
+{#    <div class="small-container">#}
+{#    <div class="row">#}
+{#          {% for comment in comment %}#}
+{#        <div class="col-3">#}
+{#                 <i class="fa fa-quote-left"></i>#}
+{#                   <p>{{ comment.description }}</p>#}
+{#                   <div class="rating">#}
+{#                        <i class="fa fa-star"></i>#}
+{#                        <i class="fa fa-star"></i>#}
+{#                        <i class="fa fa-star"></i>#}
+{#                        <i class="fa fa-star"></i>#}
+{#                        <i class="fa fa-star-o"></i>#}
+{#                    </div>#}
+{#        <p>{{ comment.time|naturaltime  }}</p>#}
+{#            {% for user in user %}#}
+{#                    <a href="{% url 'user:profile' comment.user.username %}"><h3>{{ comment.user.username }}</h3></a>#}
+{#                {% endfor %}#}
+{#        </div>#}
+{#   {% endfor %}#}
+{#    </div>#}
+{#    </div>#}
+{#</div>#}
+{#{% endblock %}#}
+
+
