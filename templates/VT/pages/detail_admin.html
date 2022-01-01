@@ -1,0 +1,67 @@
+{% extends 'VT/base.html' %}
+
+{% block page_name %}
+    Detail {{ item.title }}
+{% endblock %}
+ {% block login_form %}
+         <form id="log" action="{% url 'VTessential:login' %}" method="POST" style="width: 10rem; margin-left: 2rem;margin-right: 2rem;height: 10rem">
+                   {% csrf_token %}
+                   <input style="height: 1.5rem" type="text" placeholder="Username" name="username">
+                   <input style="height: 1.5rem" type="password" placeholder="Password" name="password">
+                   <input style="height: 2rem" type="submit" class="btn" name="Login">
+                   <a href="">Forgot password</a>
+               </form>
+  {% endblock %}
+{% block detail_page %}
+     <div class="col-2">
+     <form action="{% url "VTessential:edit" %}" method="post">{% csrf_token %}
+        {% load static %}
+         {% if item.type == "T-shirt" or item.type == "Tshirt" or item.type == "t-shirt" %}
+             <img src="{% static "img/gallery-1.jpg"%}" width="100%" id="ProductImg">
+             <div class="small-img-row">
+            {% elif item.type == "shoes" or item.type == "Shoes" %}
+             <img src="{% static "img/product-2.jpg" %}" width="100%" id="ProductImg">
+             <div class="small-img-row">
+         {% endif %}
+         </div>
+         </div>
+        <div class="col-2">
+            <p>Home / {{ item.type }}</p>
+            <h1>{{ item.title }}</h1>
+        <input type="hidden" name="product_name" value="{{item.title}}">
+        <input type="hidden" name="product_id" value="{{item.id}}">
+            <div class="rating">
+            <span>Ratings</span>
+               {% if item.rating == 5 %}
+                   <i class="fa fa-star"></i>
+                   <i class="fa fa-star"></i>
+                   <i class="fa fa-star"></i>
+                   <i class="fa fa-star"></i>
+                   <i class="fa fa-star"></i>
+               {% elif item.rating == 4 %}
+                   <i class="fa fa-star"></i>
+                   <i class="fa fa-star"></i>
+                   <i class="fa fa-star"></i>
+                   <i class="fa fa-star"></i>
+                   <i class="fa fa-star-o"></i>
+               {% elif item.rating == 0 %}
+                   <span>No ratings</span>
+                   <input type="hidden" name="rating" value="{{ item.rating }}">
+               {% endif %}
+             <p>Price ${{ item.price }}</p>
+                <input type="hidden" name="price" value="{{ item.price }}">
+            <br>
+              <input type="hidden" name="price" value="{{ item.type }}">
+            <p><b>Description :-</b>{{ item.description}}</p>
+               <input type="hidden" name="description" value="{{ item.description }}">
+                <button type="submit" class="btn">Edit</button>
+
+        </div>
+    </div>
+     </form>
+</div>
+{% endblock %}
+
+
+
+

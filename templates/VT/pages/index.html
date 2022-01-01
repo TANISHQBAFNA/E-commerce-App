@@ -1,0 +1,90 @@
+{% extends 'VT/base.html' %}
+{% block page_name %}
+    Home
+{% endblock %}
+{#{% block refresh %}#}
+{#  <meta http-equiv="refresh" content="5">#}
+{#{% endblock %}#}
+  {% block login_form %}
+
+  {% endblock %}
+
+{% block landing_page %}
+     {% load static %}
+    <div class="col-2">
+
+        <p style="color: #ff523b;font-size: 20px;">Moving to the University Made Simple!</p>
+        <h1>University Starter <br> Packs Delivered<br> Straight to You</h1>
+        <a href="" class="btn">Explore Now &#8594;</a>
+    </div>
+    <div class="col-2">
+        <img src="{% static "img/image1.png" %}">
+    </div>
+{% endblock %}
+
+{% block item_list %}
+     {% load static %}
+    <h2 class="title">Special Offer 30% to 60% off on Clothing</h2>
+        <h4 class="more">View more ...</h4>
+    <ul class="messages" style="align-items: center">
+    {% for message in messages %}
+    <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+    {% endfor %}
+        </ul>
+           <div class="row">
+           {% for item in items %}
+               <div class="col-4">
+               {% if item.type == "T-shirt" or item.type == "Tshirt" or item.type == "t-shirt" %}
+                    <a href="{% url "VTessential:item_detail" item.id %}"><img src="{% static "img/product-1.jpg" %}"></a>
+                {% elif item.type == "shoes" or item.type == "Shoes" %}
+                    <a href="{% url "VTessential:item_detail" item.id %}"><img src="{% static "img/product-2.jpg" %}"></a>
+                {% endif %}
+                   <h4><a href="{% url "VTessential:item_detail" item.id %}">{{ item.title }}</a></h4>
+                   <div class="rating">
+               {% if item.rating == 5 %}
+                   <i class="fa fa-star"></i>
+                   <i class="fa fa-star"></i>
+                   <i class="fa fa-star"></i>
+                   <i class="fa fa-star"></i>
+                   <i class="fa fa-star"></i>
+               {% elif item.rating == 4 %}
+                   <i class="fa fa-star"></i>
+                   <i class="fa fa-star"></i>
+                   <i class="fa fa-star"></i>
+                   <i class="fa fa-star"></i>
+                   <i class="fa fa-star-o"></i>
+               {% elif item.rating == 4.5 %}
+                   <i class="fa fa-star"></i>
+                   <i class="fa fa-star"></i>
+                   <i class="fa fa-star"></i>
+                   <i class="fa fa-star"></i>
+                   <i class="fa fa-star-half-o"></i>
+               {% elif item.rating == 0 %}
+                   <span>No ratings</span>
+               {% endif %}
+                   </div>
+                   <p>${{ item.price }}</p>
+       {% if request.session.username == 'tanishq'%}
+                    <button class="btn cartbtn" id="reload"  data-item-id="{{ item.id }}" data-ajax-url="{% url "VTessential:cart_item" %}">Add To Cart</button>
+               {% else %}
+               <span></span>
+               {% endif %}
+               </div>
+           {% endfor %}
+           </div>
+{% endblock %}
+
+{% block offer_page %}
+    <div class="small-container">
+        <div class="row">
+            <div class="col-2" >
+                <p style="color: #ff523b;font-size: 20px;">Moving to the University Made Simple!</p>
+                <h2>College Move-In Day: A College Packing List of Essentials for Your Dorm Room</h2>
+                <a href="" class="btn">Explore Now &#8594;</a>
+            </div>
+            <div class="col-2">
+                <iframe width="100%" height="400" src="https://www.youtube.com/embed/ImO-vBmL4gk" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+            </div>
+        </div>
+    </div>
+{% endblock %}

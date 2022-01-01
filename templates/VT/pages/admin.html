@@ -1,0 +1,251 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VTEssentials | {% block page_name %}{% endblock %}</title>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@200;300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+</head>
+<body>
+   <div class="header">
+       <div class="container">
+          <div class="navbar">
+              {% load static %}
+              <div class="logo">
+                  {% load static %}
+                  <a href="{% url 'VTessential:admin' %}"><img src="{% static "img/logo.png" %}" alt="logo" width="125px"></a>
+              </div>
+
+              <nav>
+
+                  <ul id="MenuItems">
+                      <li style="list-style: none"><a href="{% url 'user:add_user' %}" style="color: red; font-weight: 400;">Add User</a></li>
+                      <li><a href="{% url 'VTessential:list_page' %}">Items</a></li>
+                      <li><a href="{% url 'user:user_list' %}">Users</a></li>
+                       <li><a href="{% url 'user:review' %}">Reviews</a></li>
+                  </ul>
+              </nav>
+        {% if request.session.role == 'admin' %}
+            <li style="list-style: none">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="" style="color: red; font-weight: 400;">Admin </a></li>
+            <li style="list-style: none">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="{% url 'VTessential:logout' %}" style="color: black; font-weight: 400;">Logout </a></li>
+        {%else%}
+                   <form id="log" action="{% url 'VTessential:login' %}" method="POST" style="width: 10rem; margin-left: 2rem;margin-right: 2rem;height: 10rem">
+                   {% csrf_token %}
+                   <input style="height: 1.5rem" type="text" placeholder="Username" name="username">
+                   <input style="height: 1.5rem" type="password" placeholder="Password" name="password">
+                   <input style="height: 2rem" type="submit" class="btn" name="Login">
+                   <a href="">Forgot password</a>
+               </form>
+        {% endif %}
+              <i class="bi bi-person-circle" style="font-size:30px;margin-left: 40px;"></i>
+
+              <a href="cart.html"><img src="{% static "img/cart.png" %}" width="30px" height="30px"></a>
+              <img src="{% static "img/menu.png"%}" onclick="menutoggle()" class="menu-icon">
+          </div>
+          <div class="navbar-2">
+              <form id="searchform" action="search-result.html" method="get">
+                  <input type="text" placeholder="search" style="width: 20rem; margin-right: 1rem;" name="search">
+                  <input type="submit" class="btn" style="width: 5rem;" value="Go" name="submit">
+              </form>
+          </div>
+           <div class="row">
+               {% block landing_page %}{% endblock %}
+            </div>
+           </div>
+       </div>
+   </div>
+
+<div class="small-container single-product">
+    <div class="row">
+    {% if messages %}
+<ul class="messages">
+    {% for message in messages %}
+    <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+    {% endfor %}
+</ul>
+{% endif %}
+         {% block detail_page %}
+        {% endblock %}
+    </div>
+</div>
+{% block content %}
+
+       {% if request.session.role == 'admin'%}
+ <div class="testimonial">
+
+    <h2>Add Product</h2>
+    <div class="small-container">
+
+    <div class="row">
+        <div class="col-3">
+            <form id="LoginForm" method="post" action="{% url "VTessential:admin_add" %}">
+                {% csrf_token %}
+                <input type="text" placeholder="product_name" name="product_name">
+                <input type="text" placeholder="Category E.g. T-shirt/Shoes/shirt" name="product_type">
+                <input type="number" placeholder="price" name="price" min="0">
+                <input type="number" placeholder="rating" name="rating" min="1" max="5">
+                <textarea name="description" id="" cols="36" rows="10" placeholder="Description" style="font-family:'Poppins', sans-serif; margin-top: 2rem;"></textarea>
+                <button type="submit" class="btn">Submit</button>
+            </form>
+            </div>
+        </div>
+    </div>
+</div>
+    {% endif %}
+{% endblock %}
+
+
+<!-------------- Our  Products Page -------------->
+   {% if request.session.role == 'admin'%}
+       <div class="small-container">
+         <h2 class="title">Item List</h2>
+        <h4 class="more">View more ...</h4>
+       <div class="row">
+           {% for item in items %}
+               <div class="col-4">
+               <form action="{% url "VTessential:warning" %}" method="post">{% csrf_token %}
+                {% if item.type == "T-shirt" or item.type == "Tshirt" or item.type == "t-shirt" %}
+                    <a href="{% url "VTessential:admin_review" item.id %}"><img src="{% static "img/product-1.jpg" %}"></a>
+                {% elif item.type == "shoes" or item.type == "Shoes" %}
+                    <a href="{% url "VTessential:admin_review" item.id %}"><img src="{% static "img/product-2.jpg" %}"></a>
+                {% endif %}
+                   <h4><a href="{% url "VTessential:admin_review" item.id %}">{{ item.title }}</a></h4>
+                   <div class="rating">
+               {% if item.rating == 5 %}
+                   <i class="fa fa-star"></i>
+                   <i class="fa fa-star"></i>
+                   <i class="fa fa-star"></i>
+                   <i class="fa fa-star"></i>
+                   <i class="fa fa-star"></i>
+               {% elif item.rating == 4 %}
+                   <i class="fa fa-star"></i>
+                   <i class="fa fa-star"></i>
+                   <i class="fa fa-star"></i>
+                   <i class="fa fa-star"></i>
+                   <i class="fa fa-star-o"></i>
+               {% elif item.rating == 4.5 %}
+                   <i class="fa fa-star"></i>
+                   <i class="fa fa-star"></i>
+                   <i class="fa fa-star"></i>
+                   <i class="fa fa-star"></i>
+                   <i class="fa fa-star-half-o"></i>
+               {% elif item.rating == 0 %}
+                   <span>No ratings</span>
+               {% endif %}
+                   </div>
+                   <p>${{ item.price }}</p>
+               <input type="hidden" name="price" value="{{ item.price }}">
+                   <p> This item was added <b>{{ item.cart_items }}</b> times by our Users</p>
+                <button type="submit" class="btn">Delete</button>
+                </form>
+               </div>
+
+   {% endfor %}
+   {% endif %}
+           </div>
+   </div>
+
+
+
+<!----------offer--------------->
+
+   <div class="offer">
+       {% block offer_page %}{% endblock %}
+   </div>
+
+
+<!----------Footer--------------->
+
+<div class="footer">
+    <div class="container">
+        <div class="row">
+            <div class="footer-col1">
+               <h3>Download Our App</h3>
+                <p>Download App for Android and ios mobile phone.</p>
+                <div class="app-logo">
+                    <img src="{% static "img/play-store.png" %}">
+                    <img src="{% static "img/app-store.png"%}">
+                </div>
+            </div>
+            <div class="footer-col2">
+               <img src="{% static "img/logo-white.png" %}" >
+                <p>Our Purpose Is To Sustainably Make the Pleasure and Benefits of Sports Accessible to the Many.</p>
+            </div>
+            <div class="footer-col3">
+               <h3>Useful Links</h3>
+                <ul>
+                    <li>Coupons</li>
+                    <li>Blog Post</li>
+                    <li>Return Policy</li>
+                    <li>Join Affiliate</li>
+                </ul>
+            </div>
+            <div class="footer-col4">
+               <h3>Follow Us</h3>
+                <ul>
+                    <li>Facebook</li>
+                    <li>Twitter<li>
+                    <li>Instagram</li>
+                    <li>YouTube</li>
+                </ul>
+            </div>
+        </div>
+        <hr>
+    </div>
+</div>
+
+<div class="social-panel-container">
+	<div class="social-panel">
+		<p>Created with <i class="fa fa-heart"></i> by
+			<a target="_blank" href="#">VTEssentials</a></p>
+		<button class="close-btn"><i class="fa fa-times"></i></button>
+		<h4>Get in touch on</h4>
+		<ul>
+			<li>
+					<i class="fa fa-twitter"></i>
+			</li>
+			<li>
+					<i class="fa fa-linkedin"></i>
+			</li>
+			<li>
+					<i class="fa fa-facebook"></i>
+			</li>
+			<li>
+					<i class="fa fa-instagram"></i>
+			</li>
+		</ul>
+	</div>
+</div>
+<button class="floating-btn">
+	Get in Touch
+</button>
+
+
+
+<!-------------js for toggle menu-------------->
+   {% load static %}
+<script src="{% static 'js/app.js' %}"></script>
+<script>
+
+    var MenuItems = document.getElementById("MenuItems");
+
+    MenuItems.style.maxHeight = "0px";
+
+    function menutoggle()
+    {
+        if(MenuItems.style.maxHeight == "0px")
+            {
+                MenuItems.style.maxHeight = "300px";
+            }else
+            {
+                MenuItems.style.maxHeight = "0px"
+            }
+    }
+</script>
+</body>
+</html>
+

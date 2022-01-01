@@ -1,0 +1,129 @@
+{% extends 'VT/base.html' %}
+{% load humanize %}
+{% load static %}
+
+{% block page_name %}
+    Detail {{ item.title }}
+{% endblock %}
+ {% block login_form %}
+         <form id="log" action="{% url 'VTessential:login' %}" method="POST" style="width: 10rem; margin-left: 2rem;margin-right: 2rem;height: 10rem">
+                   {% csrf_token %}
+                   <input style="height: 1.5rem" type="text" placeholder="Username" name="username">
+                   <input style="height: 1.5rem" type="password" placeholder="Password" name="password">
+                   <input style="height: 2rem" type="submit" class="btn" name="Login">
+                   <a href="">Forgot password</a>
+               </form>
+  {% endblock %}
+{% block detail_page %}
+     <div class="col-2">
+        {% load static %}
+         {% if item.type == "T-shirt" or item.type == "Tshirt" or item.type == "t-shirt" %}
+             <img src="{% static "img/gallery-1.jpg"%}" width="100%" id="ProductImg">
+             <div class="small-img-row">
+
+            {% elif item.type == "shoes" or item.type == "Shoes" %}
+             <img src="{% static "img/product-2.jpg" %}" width="100%" id="ProductImg">
+             <div class="small-img-row">
+         {% endif %}
+         </div>
+         </div>
+        <div class="col-2">
+            <p>Home / T-Shirt</p>
+            <h1>{{ item.title }}</h1>
+            <h4>{{ item.title }}</h4>
+
+            <select>
+               <option>Select Size</option>
+               <option>XXL</option>
+               <option>XL</option>
+               <option>Large</option>
+               <option>Medium</option>
+               <option>Small</option>
+           </select>
+
+            <input type="number" value="1" id="count">
+            <button href="cart.html" class="btn">Buy Now</button>
+            <button class="btn cartbtn" id="add to cart" data-item-id="{{ item.id }}" data-ajax-url="{% url   "VTessential:cart_item" %}">Add To Cart</button> <span id="cart-msg" style="font-size:12px;color: green;"></span>
+            {% csrf_token %}
+            <h3>PRODUCT DETAILS <i class="fa fa-indent"></i></h3>
+            <br>
+            <p>{{ item.description}}</p>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block item_list %}
+     {% load static %}
+    <h2 class="title">Recently Viewed</h2>
+        <h4 class="more">View more ...</h4>
+           <div class="row">
+                <div class="col-4">
+                   <img src="{% static "img/product-2.jpg"%}">
+                   <h4>HRX Gray Trackpants</h4>
+                   <div class="rating">
+                       <i class="fa fa-star"></i>
+                       <i class="fa fa-star"></i>
+                       <i class="fa fa-star"></i>
+                       <i class="fa fa-star"></i>
+                       <i class="fa fa-star-half-o"></i>
+                   </div>
+                   <p>$45.00</p>
+               </div>
+               <div class="col-4">
+                   <img src="{% static "img/product-12.jpg"%}">
+                   <h4>HRX Gray Trackpants</h4>
+                   <div class="rating">
+                       <i class="fa fa-star"></i>
+                       <i class="fa fa-star"></i>
+                       <i class="fa fa-star"></i>
+                       <i class="fa fa-star"></i>
+                       <i class="fa fa-star-half-o"></i>
+                   </div>
+                   <p>$45.00</p>
+               </div>
+               <div class="col-4">
+                   <img src="{%  static  "img/product-4.jpg"%}">
+                   <h4>Blue Printed T-Shirt</h4>
+                   <div class="rating">
+                       <i class="fa fa-star"></i>
+                       <i class="fa fa-star"></i>
+                       <i class="fa fa-star"></i>
+                       <i class="fa fa-star"></i>
+                       <i class="fa fa-star-o"></i>
+                   </div>
+                   <p>$55.00</p>
+               </div>
+           </div>
+
+{% if request.session.username %}
+    <div class="testimonial">
+
+    <h2>Reviews</h2>
+    <div class="small-container">
+    <div class="row">
+          {% for comment in comment %}
+        <div class="col-3">
+                 <i class="fa fa-quote-left"></i>
+                   <p>{{ comment.description }}</p>
+                   <div class="rating">
+                        <i class="fa fa-star"></i>
+                        <i class="fa fa-star"></i>
+                        <i class="fa fa-star"></i>
+                        <i class="fa fa-star"></i>
+                        <i class="fa fa-star-o"></i>
+                    </div>
+        <p>{{ comment.time|naturaltime  }}</p>
+            {% for user in user %}
+                    <a href="{% url 'user:profile' user.username %}"><h3>{{ comment.user.username }}</h3></a>
+                {% endfor %}
+        </div>
+   {% endfor %}
+    </div>
+    </div>
+</div>
+    {% endif %}
+{% endblock %}
+
+
+

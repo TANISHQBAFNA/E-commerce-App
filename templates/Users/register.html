@@ -1,0 +1,33 @@
+{% extends 'VT/base.html' %}
+{% block page_name %}
+    Register
+{% endblock %}
+  {% block login_form %}
+
+  {% endblock %}
+
+{% block item_list %}
+     {% load static %}
+    <div class="testimonial">
+    <h2>Register</h2>
+    <div class="small-container">
+    <div class="row">
+        <div class="col-3">
+            <form id="LoginForm" method="POST" action="{% url "user:register" %}">
+                {% csrf_token %}
+                <input type="text" placeholder="Username" name="username">
+                <input type="text" placeholder="First Name" name="first_name">
+                <input type="text" placeholder="Last Name" name="last_name">
+                <input type="email" placeholder="Email" name="email">
+                <input type="password" placeholder="password" name="password">
+                <button type="submit" class="btn">Submit</button>
+                <input type="hidden" name="role" value="regular">
+                <p>* cannot be modified</p>
+            </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
+

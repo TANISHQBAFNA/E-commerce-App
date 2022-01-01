@@ -1,0 +1,11 @@
+{% extends 'VT/base.html' %}
+{% block page_name %}
+    Home
+{% endblock %}
+  {% block content %}
+      <form method="post" action="{% url "VTessential:delete" %}" >
+      {% csrf_token %}
+      <input type="text" placeholder="Enter product name you want to delete" name="product_name">
+        <button class="btn" type="submit">Please Confirm</button>
+      </form>
+  {% endblock %}
