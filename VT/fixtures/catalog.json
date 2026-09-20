@@ -1,0 +1,26 @@
+[
+  {
+    "model": "VT.newitem",
+    "pk": 1,
+    "fields": {
+      "title": "Red Printed Tshirt by HRX",
+      "rating": 4,
+      "type": "T-shirt",
+      "price": 35,
+      "description": "Tshirt",
+      "cart_items": 0
+    }
+  },
+  {
+    "model": "VT.newitem",
+    "pk": 4,
+    "fields": {
+      "title": "HRX Sports Shoes",
+      "rating": 5,
+      "type": "Shoes",
+      "price": 35,
+      "description": "Good Product",
+      "cart_items": 0
+    }
+  }
+]
